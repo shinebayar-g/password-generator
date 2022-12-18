@@ -1,5 +1,5 @@
-import { Test } from './test-component';
+import { Generator } from './generator';
 
 export default function Home() {
-    return <Test />;
+    return <Generator />;
 }
