@@ -83,6 +83,7 @@ export function Generator() {
                     background: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
                 },
             }}
+            padding='xs'
         >
             <Center>
                 <Paper p={25}>
@@ -95,6 +96,7 @@ export function Generator() {
                             value={value} onChange={(event) => setValue(event.currentTarget.value)}
                             error={error}
                             autosize
+                            minRows={2}
                             maxRows={10}
                         />
                         <Button onClick={() => generatePassword()}>
@@ -125,6 +127,7 @@ export function Generator() {
                             label="Include numbers"
                             description="e.g. 1234"
                             size="md"
+                            mt="sm"
                             checked={includeNumbers}
                             onChange={(event) => setIncludeNumbers(event.currentTarget.checked)}
                         />
@@ -169,7 +172,7 @@ export function Generator() {
                         <NumberInput
                             defaultValue={1}
                             placeholder="1"
-                            label="Minimum special characters"
+                            label="Minimum symbols"
                         />
                         <NumberInput
                             placeholder="1"
