@@ -18,6 +18,7 @@ import {
 export function Generator() {
     const theme = useMantineTheme();
     const [passLength, setPassLength] = useState(16);
+    const [value, setValue] = useState('');
 
     return (
         <AppShell
@@ -30,7 +31,7 @@ export function Generator() {
             <Center>
                 <Paper p={25}>
                     <Stack w='400px'>
-                        <Title align='center' size={18}>Free, Open-Source Strong Password Generator
+                        <Title align='center' size={18}>Open-Source Strong Password Generator
                         </Title>
                         <Text mt="sm" size="sm">
                             Password length: <b>{passLength}</b>
@@ -52,20 +53,24 @@ export function Generator() {
                             label="Include numbers"
                             description="e.g. 1234"
                             size="md"
+                            defaultChecked
                         />
                         <Switch
                             label="Include lowercase characters"
                             description="e.g. abcd"
                             size="md"
+                            defaultChecked
                         />
                         <Switch
                             label="Include uppercase characters"
                             description="e.g. ABCD"
                             size="md"
+                            defaultChecked
                         />
                         <Switch
                             label="Don't begin with numbers or symbols"
                             size="md"
+                            defaultChecked
                         />
                         <TextInput
                             label="Include special characters"
@@ -90,7 +95,7 @@ export function Generator() {
                         <Button>
                             Generate
                         </Button>
-                        <CopyButton value="https://mantine.dev">
+                        <CopyButton value={value}>
                             {({ copied, copy }) => (
                                 <Button color={copied ? 'teal' : 'blue'} onClick={copy}>
                                     {copied ? 'Copied password' : 'Copy'}
@@ -100,6 +105,7 @@ export function Generator() {
                         <Textarea
                             label="Your generated password:"
                             size="md"
+                            value={value} onChange={(event) => setValue(event.currentTarget.value)}
                         />
                     </Stack>
                 </Paper>
