@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     AppShell,
     useMantineTheme,
@@ -14,6 +14,15 @@ import {
     Stack,
     Title,
 } from '@mantine/core';
+
+interface Options {
+    lower?: Function,
+    upper?: Function,
+    number?: Function,
+    symbol?: Function,
+}
+
+const options: Options = {};
 
 export function Generator() {
     const theme = useMantineTheme();
@@ -29,6 +38,30 @@ export function Generator() {
     const [startWithLetter, setStartWithLetter] = useState(true);
     const [minNumbers, setMinNumbers] = useState(1);
     const [minSymbols, setMinSymbols] = useState(1);
+
+    useEffect(() => {
+        if (includeLowerCase) {
+            options.lower = getRandomLower;
+        } else {
+            delete options['lower']
+        }
+        if (includeUpperCase) {
+            options.upper = getRandomUpper;
+        } else {
+            delete options['upper']
+        }
+        if (includeNumbers) {
+            options.number = getRandomNumber;
+        } else {
+            delete options['number']
+        }
+        if (includeSymbols) {
+            options.symbol = getRandomSymbol;
+        } else {
+            delete options['symbol']
+        }
+        console.log(Object.keys(options).length);
+    }, [includeLowerCase, includeUpperCase, includeNumbers, includeSymbols]);
 
     const generatePassword = () => {
         const passwords = [];
