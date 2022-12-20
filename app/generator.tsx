@@ -15,15 +15,6 @@ import {
     Title,
 } from '@mantine/core';
 
-interface Options {
-    lower?: Function,
-    upper?: Function,
-    number?: Function,
-    symbol?: Function,
-}
-
-const options: Options = {};
-
 export function Generator() {
     const theme = useMantineTheme();
     const [value, setValue] = useState('');
@@ -35,33 +26,8 @@ export function Generator() {
     const [includeUpperCase, setIncludeUpperCase] = useState(true);
     const [includeSymbols, setIncludeSymbols] = useState(true);
     const [symbols, setSymbols] = useState("{}!#$%&@/()[]\\*^-.+,_`~:;=?|");
-    const [startWithLetter, setStartWithLetter] = useState(true);
     const [minNumbers, setMinNumbers] = useState(1);
     const [minSymbols, setMinSymbols] = useState(1);
-
-    useEffect(() => {
-        if (includeLowerCase) {
-            options.lower = getRandomLower;
-        } else {
-            delete options['lower']
-        }
-        if (includeUpperCase) {
-            options.upper = getRandomUpper;
-        } else {
-            delete options['upper']
-        }
-        if (includeNumbers) {
-            options.number = getRandomNumber;
-        } else {
-            delete options['number']
-        }
-        if (includeSymbols) {
-            options.symbol = getRandomSymbol;
-        } else {
-            delete options['symbol']
-        }
-        console.log(Object.keys(options).length);
-    }, [includeLowerCase, includeUpperCase, includeNumbers, includeSymbols]);
 
     const generatePassword = () => {
         const passwords = [];
@@ -79,34 +45,30 @@ export function Generator() {
             options.push(getRandomSymbol);
         }
         if (options.length <= 0) {
-            setError('Invalid condition')
+            setError('Invalid condition');
             return;
         } else {
             setError('')
         }
 
         for (let i = 1; i <= quantity; i++) {
-            let finalPassword = '';
+            let password = '';
 
-            if ((includeNumbers || includeSymbols) && startWithLetter) {
-                const firstOptions = [...options]
-                const includeNumberIndex = firstOptions.indexOf(getRandomNumber, 0);
-                if (includeNumberIndex > -1) {
-                    firstOptions.splice(includeNumberIndex, 1);
+            if (includeNumbers) {
+                for (let i = 0; i < minNumbers; i++) {
+                    password += getRandomNumber();
                 }
-                const includeSymbolIndex = firstOptions.indexOf(getRandomSymbol, 0);
-                if (includeSymbolIndex > -1) {
-                    firstOptions.splice(includeSymbolIndex, 1);
-                }
-                const randomFunc = firstOptions[Math.floor(Math.random() * firstOptions.length)];
-                finalPassword += randomFunc(symbols);
             }
-
-            for (let i = finalPassword.length; i < passLength; i++) {
+            if (includeSymbols) {
+                for (let i = 0; i < minSymbols; i++) {
+                    password += getRandomSymbol(symbols);
+                }
+            }
+            for (let i = password.length; i < passLength; i++) {
                 const randomFunc = options[Math.floor(Math.random() * options.length)];
-                finalPassword += randomFunc(symbols);
+                password += randomFunc(symbols);
             }
-            passwords.push(finalPassword);
+            passwords.push(shuffle(password.split("")).join(""));
         }
         setValue(passwords.join('\n'));
     }
@@ -192,20 +154,13 @@ export function Generator() {
                             disabled={!includeSymbols}
                             onChange={(event) => setSymbols(event.currentTarget.value)}
                         />
-                        <Switch
-                            label="Don't begin with numbers or symbols"
-                            size="md"
-                            checked={startWithLetter}
-                            disabled={!includeSymbols && !includeNumbers}
-                            onChange={(event) => setStartWithLetter(event.currentTarget.checked)}
-                        />
                         <NumberInput
                             value={minNumbers}
                             placeholder="1"
                             label="Minimum numbers"
                             disabled={!includeNumbers}
                             min={1}
-                            max={passLength - minSymbols}
+                            max={passLength - (includeSymbols ? minSymbols : 0) - (includeLowerCase ? 1 : 0) - (includeUpperCase ? 1 : 0)}
                             onChange={(val) => setMinNumbers(val!)}
                         />
                         <NumberInput
@@ -214,7 +169,7 @@ export function Generator() {
                             label="Minimum symbols"
                             disabled={!includeSymbols}
                             min={1}
-                            max={passLength - minNumbers}
+                            max={passLength - (includeNumbers ? minNumbers : 0) - (includeLowerCase ? 1 : 0) - (includeUpperCase ? 1 : 0)}
                             onChange={(val) => setMinSymbols(val!)}
                         />
                         <NumberInput
@@ -245,4 +200,12 @@ const getRandomNumber = () => {
 
 const getRandomSymbol = (symbols: string) => {
     return symbols[Math.floor(Math.random() * symbols.length)];
+}
+
+const shuffle = (arr: string[]) => {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr
 }
