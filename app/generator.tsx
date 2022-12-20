@@ -27,6 +27,8 @@ export function Generator() {
     const [includeSymbols, setIncludeSymbols] = useState(true);
     const [symbols, setSymbols] = useState("{}!#$%&@/()[]\\*^-.+,_`~:;=?|");
     const [startWithLetter, setStartWithLetter] = useState(true);
+    const [minNumbers, setMinNumbers] = useState(1);
+    const [minSymbols, setMinSymbols] = useState(1);
 
     const generatePassword = () => {
         const passwords = [];
@@ -165,14 +167,22 @@ export function Generator() {
                             onChange={(event) => setStartWithLetter(event.currentTarget.checked)}
                         />
                         <NumberInput
-                            defaultValue={1}
+                            value={minNumbers}
                             placeholder="1"
                             label="Minimum numbers"
+                            disabled={!includeNumbers}
+                            min={1}
+                            max={passLength - minSymbols}
+                            onChange={(val) => setMinNumbers(val!)}
                         />
                         <NumberInput
-                            defaultValue={1}
+                            value={minSymbols}
                             placeholder="1"
                             label="Minimum symbols"
+                            disabled={!includeSymbols}
+                            min={1}
+                            max={passLength - minNumbers}
+                            onChange={(val) => setMinSymbols(val!)}
                         />
                         <NumberInput
                             placeholder="1"
