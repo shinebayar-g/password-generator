@@ -12,6 +12,7 @@ import {
     Routes,
     Scripts,
     Title,
+    Link,
 } from 'solid-start';
 import './root.css';
 
@@ -22,9 +23,11 @@ export default function Root() {
     return (
         <Html lang='en'>
             <Head>
-                <Title>SolidStart - With TailwindCSS</Title>
+                <Title>Open-Source Strong Password Generator</Title>
                 <Meta charset='utf-8' />
                 <Meta name='viewport' content='width=device-width, initial-scale=1' />
+                <Meta name='description' content='Open-Source Strong Password Generator' />
+                <Link rel='icon' href='/favicon.png' />
             </Head>
             <Body>
                 <Suspense>
@@ -35,7 +38,12 @@ export default function Root() {
                                     <A href='/'>Home</A>
                                 </li>
                                 <li class={`border-b-2 ${active('/about')} mx-1.5 sm:mx-6`}>
-                                    <A href='/about'>About</A>
+                                    <A
+                                        href='https://github.com/shinebayar-g/password-generator'
+                                        target='_blank'
+                                    >
+                                        Github
+                                    </A>
                                 </li>
                             </ul>
                         </nav>
