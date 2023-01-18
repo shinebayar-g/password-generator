@@ -2,12 +2,6 @@
 
 ## Development
 
-Requirements:
-
-- Node.js 16.8 or later.
-
-```bash
+```sh
 npm run dev
-# or
-yarn dev
 ```
